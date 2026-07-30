@@ -17,8 +17,7 @@ def parse_role_expression(role: str, allowed_operators: str = '+-*') -> tuple[li
         if len(x) == 0:
             raise InvalidMathExpressionError()
 
-    for x in lista:
-        validate_column_name(x)
+    validate_column_name(lista)
 
     return lista, operator[0]
 

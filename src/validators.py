@@ -4,11 +4,7 @@ from exceptions import InvalidColumnNameError, InvalidColumnTypeError
 
 def validate_column_exists(df: pd.DataFrame, columns: list[str]) -> None:
 
-    non_existing = []
-
-    for x in columns:
-        if x not in df.columns:
-            non_existing.append(x)
+    non_existing = [x for x in columns if x not in df.columns]
 
     if non_existing:
         raise InvalidColumnNameError(f"Columns {non_existing} do not exist in the DataFrame")
@@ -29,11 +25,7 @@ def validate_column_name(column_names: str | list[str]) -> None:
 
 def validate_numeric_columns(df: pd.DataFrame, columns: list[str]) -> None:
 
-    non_numeric = []
+    non_numeric = [col for col in columns if not pd.api.types.is_numeric_dtype(df[col])]
     
-    for col in columns:
-        if not pd.api.types.is_numeric_dtype(df[col]):
-            non_numeric.append(col)
-            
     if non_numeric:
         raise InvalidColumnTypeError(f"The following columns are not numeric: {non_numeric}")

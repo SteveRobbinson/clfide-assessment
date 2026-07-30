@@ -14,12 +14,17 @@ def validate_column_exists(df: pd.DataFrame, columns: list[str]) -> None:
         raise InvalidColumnNameError(f"Columns {non_existing} do not exist in the DataFrame")
 
 
-def validate_column_name(column_name: str) -> None:
+def validate_column_name(column_names: str | list[str]) -> None:
     
+    if isinstance(column_names, str):
+        column_names = [column_names]
+
     pattern = re.compile("^[a-z_]+$")
-    
-    if not bool(pattern.fullmatch(column_name.strip())):
-        raise InvalidColumnNameError()
+
+    broken = [x.strip() for x in column_names if not bool(pattern.fullmatch(x.strip()))]
+
+    if broken:
+        raise InvalidColumnNameError(f"These columns are invalid: {broken}")
 
 
 def validate_numeric_columns(df: pd.DataFrame, columns: list[str]) -> None:

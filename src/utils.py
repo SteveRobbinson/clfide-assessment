@@ -11,7 +11,7 @@ def parse_role_expression(role: str, allowed_operators: str = '+-*') -> tuple[li
 
     operator = [znak for znak in role if znak in allowed_operators] 
     if len(operator) != 1:
-        raise InvalidMathExpressionError(f"Expected 1, got {len(operator)}")
+        raise InvalidMathExpressionError(f"Expected 1 allowed operator (+, -, *), got {len(operator)}")
 
     lista = role.split(operator[0])
     lista = [x.strip() for x in lista]

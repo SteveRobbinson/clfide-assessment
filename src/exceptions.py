@@ -3,7 +3,7 @@ class ValidationError(Exception):
 
 class InvalidMathExpressionError(ValidationError):
     def __init__(self, message: str | None = None):
-        base_msg = "Given math expression is invalid!\nAllowed operators: +, -, *"
+        base_msg = "Given math expression is invalid!"
         if message:
             super().__init__(f"{base_msg}\n{message}")
         else:

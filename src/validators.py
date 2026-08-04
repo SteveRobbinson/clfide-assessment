@@ -1,8 +1,8 @@
 import pandas as pd
 import re
-from exceptions import InvalidColumnNameError, InvalidColumnTypeError
 
-def validate_column_exists(df: pd.DataFrame, columns: list[str]) -> None:
+def has_required_columns(df: pd.DataFrame, columns: list[str]) -> bool:
+    return set(columns).issubset(df.columns)
 
     non_existing = [x for x in columns if x not in df.columns]
 

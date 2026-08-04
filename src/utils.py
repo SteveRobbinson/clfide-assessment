@@ -7,11 +7,11 @@ from typing import Callable
 def parse_role_expression(role: str, allowed_operators: str = '+-*') -> tuple[list[str], str]:
     
     if not isinstance(role, str):
-        raise InvalidMathExpressionError(f"Expected str as role, got {type(role).__name__}")
+        raise InvalidMathExpressionError(details=f"Expected str as role, got {type(role).__name__}")
 
     operator = [znak for znak in role if znak in allowed_operators] 
     if len(operator) != 1:
-        raise InvalidMathExpressionError(f"Expected 1 allowed operator (+, -, *), got {len(operator)}")
+        raise InvalidMathExpressionError(details=f"Expected 1 allowed operator (+, -, *), got {len(operator)}")
 
     lista = role.split(operator[0])
     lista = [x.strip() for x in lista]

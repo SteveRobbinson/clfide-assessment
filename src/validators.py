@@ -1,31 +1,14 @@
 import pandas as pd
 import re
-from exceptions import InvalidColumnNameError, InvalidColumnTypeError
 
-def validate_column_exists(df: pd.DataFrame, columns: list[str]) -> None:
-
-    non_existing = [x for x in columns if x not in df.columns]
-
-    if non_existing:
-        raise InvalidColumnNameError(details=f"Columns {non_existing} do not exist in the DataFrame")
+def has_required_columns(df: pd.DataFrame, columns: list[str]) -> bool:
+    return set(columns).issubset(df.columns)
 
 
-def validate_column_name(column_names: str | list[str]) -> None:
-    
-    if isinstance(column_names, str):
-        column_names = [column_names]
-
+def has_valid_column_name(column_name: str) -> bool:
     pattern = re.compile("^[a-z_]+$")
-
-    broken = [x.strip() for x in column_names if not bool(pattern.fullmatch(x.strip()))]
-
-    if broken:
-        raise InvalidColumnNameError(details=f"These columns are invalid: {broken}")
+    return bool(pattern.fullmatch(column_name.strip()))
 
 
-def validate_numeric_columns(df: pd.DataFrame, columns: list[str]) -> None:
-
-    non_numeric = [col for col in columns if not pd.api.types.is_numeric_dtype(df[col])]
-    
-    if non_numeric:
-        raise InvalidColumnTypeError(details=f"The following columns are not numeric: {non_numeric}")
+def are_columns_numeric_type(df: pd.DataFrame, columns: list[str]) -> bool:
+    return pd.api.types.is_numeric_dtype(df[columns].values)

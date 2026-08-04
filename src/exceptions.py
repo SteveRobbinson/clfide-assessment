@@ -17,3 +17,6 @@ class InvalidColumnNameError(ValidationError):
     def __init__(self, base_message: str = "Input column name is incorrect! Allowed characters: (a-z) and (_).", details: str | None = None):
             super().__init__(base_message, details)
 
+class InvalidColumnTypeError(ValidationError):
+    def __init__(self, base_message: str = "Column type is not numeric", details: str | None = None):
+        super().__init__(base_message, details)

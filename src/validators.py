@@ -4,18 +4,10 @@ import re
 def has_required_columns(df: pd.DataFrame, columns: list[str]) -> bool:
     return set(columns).issubset(df.columns)
 
-    non_existing = [x for x in columns if x not in df.columns]
 
-    if non_existing:
-        raise InvalidColumnNameError(details=f"Columns {non_existing} do not exist in the DataFrame")
-
-
-def validate_column_name(column_names: str | list[str]) -> None:
-    
-    if isinstance(column_names, str):
-        column_names = [column_names]
-
+def has_valid_column_name(column_name: str) -> bool:
     pattern = re.compile("^[a-z_]+$")
+    return bool(pattern.fullmatch(column_name.strip()))
 
     broken = [x.strip() for x in column_names if not bool(pattern.fullmatch(x.strip()))]
 

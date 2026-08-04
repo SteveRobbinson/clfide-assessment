@@ -1,19 +1,31 @@
 import pandas as pd
-from validators import validate_column_exists, validate_column_name, validate_numeric_columns
-from utils import parse_role_expression, compute_new_column
-from exceptions import InvalidMathExpressionError, InvalidColumnNameError
+from utils import parse_role_expression, add_calculated_column
+from validators import has_valid_column_name, has_required_columns, are_columns_numeric_type
 
-def add_virtual_column(df: pd.DataFrame, role: str, new_column: str) -> pd.DataFrame:
-    
-    try:
-        
-        validate_column_name(new_column)
-        column_names, math_operator = parse_role_expression(role)
-        validate_column_exists(df, column_names)
-        validate_numeric_columns(df, column_names)
+def add_virtual_column(df: pd.DataFrame, role: str, new_column: str):
 
-        return compute_new_column(df, new_column, column_names, math_operator)
+    parsed_expression, operators = parse_role_expression(role)
 
-    except (InvalidMathExpressionError, InvalidColumnNameError) as err:
-        print(f"{err}, returning an empty DataFrame")
+    if len(operators) != 1:
         return pd.DataFrame([])
+
+    if len(parsed_expression) != 3:
+        return pd.DataFrame([])
+
+    if parsed_expression[1] not in operators:
+        return pd.DataFrame([])
+
+
+    expression_columns = list(set(parsed_expression).difference(operators))
+
+    for col in [new_column, *expression_columns]:
+        if not has_valid_column_name(col):
+            return pd.DataFrame([])
+
+    if not has_required_columns(df, expression_columns):
+        return pd.DataFrame([])
+
+    if not are_columns_numeric_type(df, expression_columns):
+        return pd.DataFrame([])
+
+    return add_calculated_column(df, new_column, expression_columns, list(operators)[0])
